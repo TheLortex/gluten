@@ -29,6 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
+module Gluten_lwt = Dream_gluten_lwt.Gluten_lwt
+
 open Lwt.Infix
 
 module Io :

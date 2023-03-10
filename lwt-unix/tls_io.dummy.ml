@@ -30,6 +30,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
+module Gluten_lwt = Dream_gluten_lwt.Gluten_lwt
+
 type descriptor = [ `Tls_not_available ]
 
 module Io :

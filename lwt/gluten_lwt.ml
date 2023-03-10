@@ -33,6 +33,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
+module Gluten = Dream_gluten.Gluten
+
 open Lwt.Infix
 module Buffer = Gluten.Buffer
 include Gluten_lwt_intf
@@ -105,6 +107,8 @@ module IO_loop = struct
 end
 
 module Server (Io : IO) = struct
+  module Gluten = Dream_gluten.Gluten
+
   module Server = Gluten.Server
 
   type socket = Io.socket
@@ -148,6 +152,8 @@ module Server (Io : IO) = struct
 end
 
 module Client (Io : IO) = struct
+  module Gluten = Dream_gluten.Gluten
+
   module Client_connection = Gluten.Client
 
   type socket = Io.socket

@@ -30,6 +30,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
+module Gluten = Dream_gluten.Gluten
+
 open Eio.Std
 module Buffer = Gluten.Buffer
 

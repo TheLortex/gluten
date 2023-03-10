@@ -30,6 +30,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*)
 
+module Gluten = Dream_gluten.Gluten
+
 module Server : sig
   val create_connection_handler :
      read_buffer_size:int
