@@ -31,7 +31,6 @@
  *---------------------------------------------------------------------------*)
 
 module Gluten = Dream_gluten.Gluten
-
 open Eio.Std
 module Buffer = Gluten.Buffer
 
@@ -56,8 +55,8 @@ module IO_loop = struct
         | n -> k (`Ok n)
         | exception
             ( End_of_file
-            | Unix.Unix_error (ENOTCONN, _, _)
-            | Eio.Io (Eio.Exn.X (Eio_unix.Unix_error (_, _, _)), _)
+            (* | Unix.Unix_error (ENOTCONN, _, _) *)
+            (* | Eio.Io (Eio.Exn.X (Eio_unix.Unix_error (_, _, _)), _) *)
             | Eio.Io (Eio.Net.E (Connection_reset _), _) ) ->
           (* TODO(anmonteiro): logging? *)
           k `Eof)
@@ -65,18 +64,14 @@ module IO_loop = struct
       (Promise.resolve u);
     Promise.await p
 
-  let rec read flow buffer =
-    match read_inner flow buffer with
-    | r -> r
-    | exception Unix.Unix_error (Unix.EAGAIN, _, _) ->
-      Fiber.yield ();
-      read flow buffer
+  let (* rec *) read flow buffer = match read_inner flow buffer with r -> r
+  (* | exception Unix.Unix_error (Unix.EAGAIN, _, _) -> Fiber.yield (); read
+     flow buffer *)
 
-  let shutdown flow cmd =
-    try Eio.Flow.shutdown flow cmd with
-    | Unix.Unix_error (ENOTCONN, _, _)
-    | Eio.Io (Eio.Exn.X (Eio_unix.Unix_error (ENOTCONN, _, _)), _) ->
-      ()
+  let shutdown flow cmd = (* try *) Eio.Flow.shutdown flow cmd (* with *)
+
+  (* | Unix.Unix_error (ENOTCONN, _, _) *)
+  (* | Eio.Io (Eio.Exn.X (Eio_unix.Unix_error (ENOTCONN, _, _)), _) -> () *)
 
   let start :
       type t.
@@ -112,7 +107,8 @@ module IO_loop = struct
           Runtime.yield_reader t (Promise.resolve u);
           Promise.await p;
           read_loop ()
-        | `Close -> shutdown socket `Receive
+        | `Close ->
+          shutdown socket `Receive
       in
       match read_loop_step () with
       | () -> ()
@@ -130,7 +126,8 @@ module IO_loop = struct
           Runtime.yield_writer t (Promise.resolve u);
           Promise.await p;
           write_loop ()
-        | `Close _ -> shutdown socket `Send
+        | `Close _ ->
+          shutdown socket `Send
       in
       match write_loop_step () with
       | () -> ()
